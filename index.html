@@ -58,7 +58,7 @@
   p { margin: 0 0 1rem; }
 
   /* The one distinctive element: two devices showing the same short authenticated string. */
-  figure.sas { margin: 0.25rem 0 1.75rem; }
+  figure.sas { margin: 1.5rem 0 1.75rem; }
   .devices { display: flex; justify-content: center; gap: 2.5rem; }
   .device {
     position: relative;
@@ -130,15 +130,15 @@
 
 <section aria-labelledby="research">
   <h2 id="research">Research</h2>
+  <p>I work on authenticated key exchange without trusted third parties. Secure messaging and web connections usually rely on a certificate authority or an app’s key server to vouch for who is on the other end; my protocols replace that trust with something the users themselves provide, such as a short string they compare, a password they know, or a biometric.</p>
   <figure class="sas">
     <div class="devices" aria-hidden="true">
       <div class="device"><span class="who">Alice</span><span class="code">482 913</span></div>
       <div class="device"><span class="who">Bob</span><span class="code">482 913</span></div>
     </div>
-    <figcaption>In the short authenticated string (SAS) model, two devices each display a short code derived from their exchange. If the codes match, the connection is authenticated, and an attacker in the middle succeeds only with probability about one in a million.</figcaption>
+    <figcaption>One approach is the short authenticated string (SAS) model: two devices each display a short code derived from their exchange, and if the codes match, the connection is authenticated even if the key server is compromised. An attacker in the middle succeeds only with probability about one in a million.</figcaption>
   </figure>
-  <p>Secure messaging and web connections usually rely on a trusted third party, such as a certificate authority or an app’s key server, to vouch for who is on the other end. My research designs and proves protocols that remove that trust: people authenticate a connection themselves by comparing a short string, and security holds even if the server is compromised.</p>
-  <p>With my coauthors, I have built SAS-based authentication for two-party key exchange (ASIACRYPT 2025), for Signal’s X3DH handshake while preserving its deniability (SCN 2026), and for group key agreement without adding protocol messages (CANS 2026). I also work on password- and biometric-based key exchange, including an asymmetric fuzzy PAKE that protects the biometric data a server stores, which I implemented and benchmarked. I expect to complete my Ph.D. in June 2027.</p>
+  <p>In the SAS model, my coauthors and I have built authentication for two-party key exchange (ASIACRYPT 2025), for Signal’s X3DH handshake while preserving its deniability (SCN 2026), and for group key agreement without adding protocol messages (CANS 2026). On the password and biometric side, I have worked on an asymmetric fuzzy PAKE that protects the biometric data a server stores, which I also implemented and benchmarked. I expect to complete my Ph.D. in June 2027.</p>
 </section>
 
 <section aria-labelledby="publications">
