@@ -4,220 +4,650 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Apurva Rai, UC Irvine</title>
-<meta name="description" content="Apurva Rai is a Ph.D. candidate in Computer Science at UC Irvine working on cryptographic authentication without trusted third parties. On the 2026–27 academic job market.">
+<meta name="description" content="Apurva Rai is a Ph.D. candidate in Computer Science at UC Irvine. Research on authentication without trusted third parties, including short-code verification for encrypted messaging and password and biometric login.">
 <meta property="og:title" content="Apurva Rai">
-<meta property="og:description" content="Ph.D. candidate in Computer Science at UC Irvine working on cryptographic authentication without trusted third parties.">
+<meta property="og:description" content="Ph.D. candidate in Computer Science at UC Irvine. Research on authentication without trusted third parties.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:,">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&amp;display=swap" rel="stylesheet">
+<meta property="og:url" content="https://apurva-rai.github.io/">
+<meta property="og:image" content="https://apurva-rai.github.io/apurva-rai.jpg">
+<meta name="color-scheme" content="light dark">
+<link rel="canonical" href="https://apurva-rai.github.io/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='5' width='10' height='22' rx='3' fill='%231a4e7a'/%3E%3Crect x='18' y='5' width='10' height='22' rx='3' fill='%231a4e7a'/%3E%3Crect x='6.5' y='13' width='5' height='3' rx='1' fill='%23fff'/%3E%3Crect x='20.5' y='13' width='5' height='3' rx='1' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preload" href="fonts/SourceSerif4-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<script>
+  /* Apply a saved theme before first paint. */
+  (function () {
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+    document.documentElement.className = 'js';
+  })();
+</script>
 <style>
+  @font-face { font-family: 'Source Serif 4'; src: url('fonts/SourceSerif4-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Source Serif 4'; src: url('fonts/SourceSerif4-It.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+  @font-face { font-family: 'Source Serif 4'; src: url('fonts/SourceSerif4-Semibold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+
   :root {
     --paper: #ffffff;
-    --ink: #1a1a1a;
-    --muted: #555c66;
-    --rule: #d9dde3;
+    --ink: #1b1f24;
+    --muted: #56606c;
+    --rule: #dde2e8;
     --link: #1a4e7a;
-    --device: #f3f6f9;
-    --device-edge: #c5cfda;
+    --panel: #eef2f6;
+    --panel-edge: #cfd7e0;
+    --screen: #ffffff;
+    --ok: #1c6e45;
+    --ok-bg: #e1f0e7;
+    --bad: #a8281f;
+    --bad-bg: #f8e4e1;
+    --track: #7d8996;
+    --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --rail: 11rem;
+    --gap: 3rem;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #12171d;
-      --ink: #e7e9ec;
-      --muted: #a4acb6;
-      --rule: #2c343d;
+    :root:not([data-theme="light"]) {
+      --paper: #10151b;
+      --ink: #e6e9ed;
+      --muted: #a3acb8;
+      --rule: #29313b;
       --link: #93bfe8;
-      --device: #1a2129;
-      --device-edge: #354250;
+      --panel: #18202a;
+      --panel-edge: #33404e;
+      --screen: #0f141a;
+      --ok: #7fd1a6;
+      --ok-bg: #15301f;
+      --bad: #ff9a8f;
+      --bad-bg: #3a1b18;
+      --track: #6f7d8c;
     }
   }
-  html { background: var(--paper); }
-  body {
-    margin: 0;
-    color: var(--ink);
-    font-family: 'Source Serif 4', Georgia, serif;
-    font-size: 1.125rem;
-    line-height: 1.6;
-    -webkit-text-size-adjust: 100%;
+  :root[data-theme="dark"] {
+    --paper: #10151b;
+    --ink: #e6e9ed;
+    --muted: #a3acb8;
+    --rule: #29313b;
+    --link: #93bfe8;
+    --panel: #18202a;
+    --panel-edge: #33404e;
+    --screen: #0f141a;
+    --ok: #7fd1a6;
+    --ok-bg: #15301f;
+    --bad: #ff9a8f;
+    --bad-bg: #3a1b18;
+    --track: #6f7d8c;
   }
-  main { max-width: 42rem; margin: 0 auto; padding: 4.5rem 1.5rem 3rem; }
 
+  *, *::before, *::after { box-sizing: border-box; }
+  html { background: var(--paper); scroll-behavior: smooth; scroll-padding-top: 4.5rem; -webkit-text-size-adjust: 100%; }
+  body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--serif); font-size: 1.125rem; line-height: 1.62; }
+  p { margin: 0 0 1rem; }
   a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
   a:hover { text-decoration-thickness: 2px; }
-  a:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 2px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible + .track { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 3px; }
+  .wrap { max-width: 62rem; margin: 0 auto; padding: 0 1.5rem; }
+  .skip { position: absolute; left: -999px; top: 0; background: var(--paper); padding: 0.5rem 0.75rem; z-index: 10; }
+  .skip:focus { left: 0.5rem; top: 0.5rem; }
 
-  .intro { display: grid; grid-template-columns: minmax(0, 1fr) 16rem; gap: 2rem; align-items: start; }
-  .portrait { display: block; width: 100%; height: auto; border-radius: 12px; }
+  /* Top bar */
+  .top { position: sticky; top: 0; z-index: 5; background: var(--paper); border-bottom: 1px solid var(--rule); }
+  .top-in { display: flex; align-items: center; gap: 1.25rem; min-height: 3.25rem; font-family: var(--ui); font-size: 0.95rem; }
+  .brand { font-family: var(--serif); font-weight: 600; font-size: 1.0625rem; color: var(--ink); text-decoration: none; margin-right: auto; white-space: nowrap; }
+  .top nav { display: flex; gap: 1.25rem; }
+  .top nav a { color: var(--muted); text-decoration: none; padding: 0.25rem 0; border-bottom: 2px solid transparent; }
+  .top nav a:hover { color: var(--ink); }
+  .top nav a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--link); }
+  #theme { font: inherit; color: var(--muted); background: none; border: 1px solid var(--rule); border-radius: 999px; padding: 0.2rem 0.75rem; cursor: pointer; }
+  #theme:hover { color: var(--ink); border-color: var(--muted); }
+  html:not(.js) #theme { display: none; }
 
-  h1 { font-size: clamp(2.25rem, 6vw, 3rem); font-weight: 600; line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 0.6rem; }
-  .role { color: var(--muted); margin: 0 0 1rem; }
-  .links { list-style: none; padding: 0; margin: 0 0 1.25rem; display: flex; flex-wrap: wrap; gap: 0.35rem 1.5rem; }
-  .market { margin: 0; }
+  /* Hero */
+  .hero { display: grid; grid-template-columns: var(--rail) minmax(0, 42rem); gap: var(--gap); align-items: start; padding-top: 3.5rem; }
+  .portrait { display: block; width: 100%; height: auto; border-radius: 10px; }
+  h1 { font-size: clamp(2.4rem, 5.2vw, 3.3rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.012em; margin: 0 0 0.5rem; }
+  .role { color: var(--muted); margin: 0 0 1.5rem; }
+  .lead { font-size: 1.4rem; line-height: 1.42; margin: 0 0 1rem; }
+  .links { list-style: none; padding: 0; margin: 1.5rem 0 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; }
 
-  h2 { font-size: 1.375rem; font-weight: 600; margin: 3rem 0 1rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--rule); }
-  h3 { font-size: 1.0625rem; font-weight: 600; margin: 1.75rem 0 0.6rem; }
-  p { margin: 0 0 1rem; }
+  /* Live demo */
+  .demo { margin: 3rem 0 0; padding: 1.75rem 2rem 1.5rem; background: var(--panel); border: 1px solid var(--panel-edge); border-radius: 14px; }
+  .demo > * { max-width: 42rem; margin-left: auto; margin-right: auto; }
+  .demo h2 { font-size: 1.3rem; font-weight: 600; margin-top: 0; margin-bottom: 0.4rem; }
+  .demo-intro { margin-top: 0; margin-bottom: 1.5rem; }
+  .stage { display: flex; align-items: center; justify-content: center; gap: 0; margin-top: 0; margin-bottom: 1.25rem; }
+  .phone { position: relative; flex: 0 0 auto; width: 11.5rem; padding: 1.9rem 0.9rem 1.1rem; background: var(--screen); border: 1.5px solid var(--panel-edge); border-radius: 1.5rem; font-family: var(--ui); text-align: center; }
+  .phone::before { content: ""; position: absolute; top: 0.7rem; left: 50%; width: 2.4rem; height: 4px; margin-left: -1.2rem; border-radius: 2px; background: var(--panel-edge); }
+  .who { display: block; font-size: 0.875rem; color: var(--muted); }
+  .code { display: block; margin: 0.2rem 0 0.7rem; font-size: 2rem; font-weight: 650; line-height: 1.2; letter-spacing: 0.04em; font-variant-numeric: lining-nums tabular-nums; color: var(--ok); }
+  .keys { margin: 0; padding: 0.6rem 0 0; border-top: 1px solid var(--rule); font-size: 0.8125rem; text-align: left; }
+  .keys div { display: flex; justify-content: space-between; gap: 0.5rem; }
+  .keys dt { color: var(--muted); }
+  .keys dd { margin: 0; font-variant-numeric: lining-nums tabular-nums; letter-spacing: 0.03em; }
+  .keys dd.swapped { color: var(--bad); font-weight: 600; }
+  .wire { position: relative; flex: 1 1 6rem; min-width: 5rem; align-self: stretch; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--ui); font-size: 0.8125rem; text-align: center; }
+  .wire::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px dashed var(--panel-edge); }
+  .wire-label { position: relative; padding: 0.15rem 0.6rem; background: var(--panel); color: var(--muted); border: 1px solid transparent; border-radius: 999px; }
+  .wire-note { position: relative; margin-top: 0.3rem; padding: 0 0.3rem; background: var(--panel); color: var(--muted); line-height: 1.3; }
+  .stage[data-state="differ"] .code { color: var(--bad); }
+  .stage[data-attacker="on"] .wire-label { color: var(--bad); background: var(--bad-bg); border-color: var(--bad); font-weight: 600; }
+  .stage[data-attacker="on"] .wire::before { border-top-color: var(--bad); }
+  .controls { display: none; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.9rem 1.75rem; margin-top: 0; margin-bottom: 1rem; font-family: var(--ui); font-size: 0.95rem; }
+  .js .controls { display: flex; }
+  .switch { display: inline-flex; align-items: center; gap: 0.6rem; cursor: pointer; }
+  .switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .track { position: relative; flex: 0 0 auto; width: 2.6rem; height: 1.5rem; border-radius: 999px; background: var(--track); transition: background-color 0.15s; }
+  .track::after { content: ""; position: absolute; top: 0.2rem; left: 0.2rem; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--screen); transition: transform 0.15s; }
+  .switch input:checked + .track { background: var(--bad); }
+  .switch input:checked + .track::after { transform: translateX(1.1rem); }
+  .demo button { font: inherit; color: var(--link); background: var(--screen); border: 1px solid var(--panel-edge); border-radius: 999px; padding: 0.3rem 1rem; cursor: pointer; }
+  .demo button:hover { border-color: var(--link); }
+  .status { margin-top: 0; margin-bottom: 1rem; padding: 0.55rem 0.9rem; border-radius: 8px; font-family: var(--ui); font-size: 0.95rem; text-align: center; background: var(--ok-bg); color: var(--ok); }
+  .status[data-state="differ"] { background: var(--bad-bg); color: var(--bad); }
+  .demo figcaption { font-size: 0.95rem; line-height: 1.5; color: var(--muted); }
+  @keyframes settle { from { opacity: 0.25; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+  .code.fresh { animation: settle 0.28s ease-out; }
 
-  /* The one distinctive element: two devices showing the same short authenticated string. */
-  figure.sas { margin: 1.5rem 0 1.75rem; }
-  .devices { display: flex; justify-content: center; gap: 2.5rem; }
-  .device {
-    position: relative;
-    flex: 0 0 auto;
-    width: 9.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 1.7rem 0.5rem 2.1rem;
-    background: var(--device);
-    border: 1px solid var(--device-edge);
-    border-radius: 20px;
-  }
-  .device::before {
-    content: "";
-    position: absolute;
-    top: 0.65rem;
-    left: 50%;
-    width: 2.2rem;
-    height: 4px;
-    margin-left: -1.1rem;
-    border-radius: 2px;
-    background: var(--device-edge);
-  }
-  .who { font-size: 0.95rem; font-style: italic; color: var(--muted); }
-  .code {
-    font-size: clamp(1.45rem, 5vw, 1.85rem);
-    font-weight: 600;
-    font-variant-numeric: lining-nums tabular-nums;
-    letter-spacing: 0.06em;
-    color: var(--link);
-  }
-  figcaption { margin-top: 0.75rem; font-size: 0.95rem; font-style: italic; line-height: 1.5; color: var(--muted); }
+  /* Sections */
+  .band { display: grid; grid-template-columns: var(--rail) minmax(0, 42rem); gap: var(--gap); margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+  .band > h2 { font-size: 1.3rem; font-weight: 600; line-height: 1.3; margin: 0; position: sticky; top: 4.5rem; align-self: start; }
+  h3 { font-size: 1.125rem; font-weight: 600; margin: 2rem 0 0.4rem; }
+  .col > :first-child { margin-top: 0; }
+  .plain { margin: 0; padding-left: 1.2rem; }
+  .plain li { margin: 0 0 0.75rem; }
+  .next { list-style: none; margin: 0; padding: 0; }
+  .next li { margin: 0 0 0.85rem; padding-left: 1rem; border-left: 2px solid var(--rule); }
+  .next b { font-weight: 600; }
+  .note { font-size: 0.95rem; color: var(--muted); }
 
-  .note { font-size: 0.95rem; font-style: italic; color: var(--muted); }
-  .pubs { list-style: none; padding: 0; margin: 0; }
-  .pubs li { margin: 0 0 1.15rem; }
-  .pub-title { display: block; font-weight: 600; }
+  .pubs { list-style: none; margin: 0; padding: 0; }
+  .pubs > li { margin: 0 0 1.5rem; }
+  .pub-title { display: block; font-weight: 600; line-height: 1.4; }
   .pub-meta { display: block; font-size: 1rem; color: var(--muted); }
   .pub-links { font-size: 1rem; }
-  .pub-links a + a { margin-left: 0.9rem; }
+  .pub-links a { margin-right: 0.9rem; }
+  details { margin-top: 0.1rem; }
+  summary { display: inline-block; cursor: pointer; font-family: var(--ui); font-size: 0.9rem; color: var(--link); list-style: none; padding: 0.35rem 0.5rem 0.35rem 0; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: "\25B8"; display: inline-block; width: 1.1em; }
+  details[open] > summary::before { content: "\25BE"; }
+  details > div { margin-top: 0.5rem; padding-left: 1rem; border-left: 2px solid var(--rule); font-size: 1.0625rem; }
+  details > div p:last-child { margin-bottom: 0; }
 
-  .plain { padding-left: 1.2rem; margin: 0; }
-  .plain li { margin: 0 0 0.75rem; }
+  .roles { margin: 1.25rem 0 0; }
+  .roles dt { font-weight: 600; margin-top: 1.1rem; }
+  .roles dt span { font-weight: 400; color: var(--muted); }
+  .roles dd { margin: 0.1rem 0 0; }
 
-  footer { margin-top: 3.5rem; font-size: 0.9rem; color: var(--muted); }
+  .foot { margin-top: 4.5rem; padding-bottom: 3rem; font-size: 0.9rem; color: var(--muted); }
+  .foot-in { padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+  .foot p { margin: 0 0 0.3rem; }
 
-  @media (max-width: 640px) {
-    .intro { grid-template-columns: 1fr; gap: 1.5rem; }
-    .portrait { order: -1; max-width: 16rem; }
+  @media (max-width: 860px) {
+    :root { --rail: 8.5rem; --gap: 2rem; }
   }
-  @media (max-width: 520px) {
-    main { padding-top: 3rem; }
-    .devices { gap: 1rem; }
-    .device { width: 8.75rem; }
+  @media (max-width: 700px) {
+    .hero { display: block; padding-top: 2rem; }
+    .portrait { float: left; width: 6.5rem; margin: 0.25rem 1.1rem 0.75rem 0; }
+    .role { margin-bottom: 1rem; overflow: hidden; }
+    .lead { clear: left; padding-top: 0.25rem; }
+    .band { grid-template-columns: 1fr; gap: 1rem; margin-top: 3rem; }
+    .band > h2 { position: static; }
+    .demo { padding: 1.4rem 1.1rem 1.25rem; margin-top: 2.25rem; }
+    .top nav { gap: 0.85rem; }
+    .top-in { gap: 0.9rem; }
+  }
+  @media (max-width: 560px) {
+    .stage { flex-wrap: wrap; gap: 0.8rem; }
+    .phone { width: calc(50% - 0.4rem); max-width: 11.5rem; padding-left: 0.6rem; padding-right: 0.6rem; }
+    .code { font-size: 1.55rem; letter-spacing: 0.02em; }
+    .wire { order: 3; flex: 1 1 100%; min-height: 0; flex-direction: row; gap: 0.3rem; }
+    .wire::before { display: none; }
+    .wire-note { margin-top: 0; padding: 0; }
+    .stage:not([data-attacker="on"]) .wire-label { padding-left: 0; padding-right: 0; }
+    .lead { font-size: 1.25rem; }
+    #theme { display: none; }
+  }
+  @media (max-width: 370px) {
+    .brand { display: none; }
+    .top nav { width: 100%; justify-content: space-between; }
+    .wrap { padding: 0 1.1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .code.fresh { animation: none; }
+    .track, .track::after { transition: none; }
+  }
+  @media print {
+    .top, .controls, .skip { display: none; }
+    .band > h2 { position: static; }
   }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Apurva Rai",
+  "url": "https://apurva-rai.github.io/",
+  "jobTitle": "Ph.D. candidate in Computer Science",
+  "affiliation": { "@type": "CollegeOrUniversity", "name": "University of California, Irvine" },
+  "sameAs": ["https://scholar.google.com/citations?user=vQQkSJIAAAAJ&hl=en"]
+}
+</script>
 </head>
 <body>
-<main>
+<a class="skip" href="#main">Skip to content</a>
 
-<header class="intro">
-  <div class="intro-text">
-  <h1>Apurva Rai</h1>
-  <p class="role">Ph.D. candidate in Computer Science at the University of California, Irvine, advised by Stanislaw Jarecki.</p>
-  <ul class="links">
-    <li><a href="mailto:apurvr1@uci.edu">apurvr1@uci.edu</a></li>
-    <li><a href="Apurva_Rai_CV.pdf">CV (PDF)</a></li>
-    <li><a href="https://scholar.google.com/citations?user=vQQkSJIAAAAJ&amp;hl=en">Google Scholar</a></li>
-  </ul>
-  <p class="market">I am on the 2026–27 academic job market, applying for faculty, lecturer, and postdoctoral positions starting in fall 2027.</p>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top">Apurva Rai</a>
+    <nav aria-label="Sections">
+      <a href="#research">Research</a>
+      <a href="#papers">Papers</a>
+      <a href="#teaching">Teaching</a>
+      <a href="Apurva_Rai_CV.pdf">CV</a>
+    </nav>
+    <button type="button" id="theme" aria-label="Switch to dark theme">Dark</button>
   </div>
-  <img class="portrait" src="apurva-rai.jpg" width="720" height="960" alt="Apurva Rai at an overlook in Death Valley">
 </header>
 
-<section aria-labelledby="research">
-  <h2 id="research">Research</h2>
-  <p>I work on authenticated key exchange without trusted third parties. Secure messaging and web connections usually rely on a certificate authority or an app’s key server to vouch for who is on the other end; my protocols replace that trust with something the users themselves provide, such as a short string they compare, a password they know, or a biometric.</p>
-  <figure class="sas">
-    <div class="devices" aria-hidden="true">
-      <div class="device"><span class="who">Alice</span><span class="code">482 913</span></div>
-      <div class="device"><span class="who">Bob</span><span class="code">482 913</span></div>
+<main id="main" class="wrap">
+
+<section class="hero" id="top">
+  <img class="portrait" src="apurva-rai.jpg" width="720" height="960" alt="Apurva Rai at an overlook in Death Valley">
+  <div>
+    <h1>Apurva Rai</h1>
+    <p class="role">Ph.D. candidate in Computer Science at the University of California, Irvine, advised by Stanislaw Jarecki.</p>
+    <p class="lead">Before two people can talk securely, each needs to know who is on the other end. Encryption alone cannot tell them.</p>
+    <p>Today they usually rely on a trusted third party, such as a certificate authority or a messaging app’s key server. I work on protocols that need less trust in such a party, or none. In these protocols, people check each other by comparing a short code, or they log in with a password or their own biometric data. This work has appeared at ASIACRYPT 2025 and SCN 2026 and will appear at CANS 2026.</p>
+    <p>I expect to finish my Ph.D. in June 2027 and am looking for positions that start in fall 2027.</p>
+    <ul class="links">
+      <li><a href="mailto:apurvr1@uci.edu">apurvr1@uci.edu</a></li>
+      <li><a href="Apurva_Rai_CV.pdf">CV (PDF)</a></li>
+      <li><a href="https://scholar.google.com/citations?user=vQQkSJIAAAAJ&amp;hl=en">Google Scholar</a></li>
+    </ul>
+  </div>
+</section>
+
+<figure class="demo" id="demo" aria-labelledby="demo-title">
+  <h2 id="demo-title">Compare a short code</h2>
+  <p class="demo-intro">Two phones exchange keys over a network that an attacker may control. Each phone then shows six digits computed from the keys it saw, and the two people read the digits to each other on a call where they recognize each other’s voice. In this simplified version the attacker swaps in random keys, and the digits then differ except about once in a million sessions.</p>
+
+  <div class="stage" id="stage" data-state="match" data-attacker="off">
+    <div class="phone">
+      <span class="who">Alice’s phone</span>
+      <span class="code" id="code-a">482 913</span>
+      <dl class="keys">
+        <div><dt>Own key</dt><dd id="a-own">3fa9…</dd></div>
+        <div><dt>Received</dt><dd id="a-got">77c2…</dd></div>
+      </dl>
     </div>
-    <figcaption>One approach is the short authenticated string (SAS) model: two devices each display a short code derived from their exchange, and if the codes match, the connection is authenticated even if the key server is compromised. An attacker in the middle succeeds only with probability about one in a million.</figcaption>
-  </figure>
-  <p>In the SAS model, my coauthors and I have built authentication for two-party key exchange (ASIACRYPT 2025), for Signal’s X3DH handshake while preserving its deniability (SCN 2026), and for group key agreement without adding protocol messages (CANS 2026). On the password and biometric side, I have worked on an asymmetric fuzzy PAKE that protects the biometric data a server stores, which I also implemented and benchmarked. I expect to complete my Ph.D. in June 2027.</p>
+    <div class="wire">
+      <span class="wire-label" id="wire-label">Network</span>
+      <span class="wire-note" id="wire-note">passes both keys unchanged</span>
+    </div>
+    <div class="phone">
+      <span class="who">Bob’s phone</span>
+      <span class="code" id="code-b">482 913</span>
+      <dl class="keys">
+        <div><dt>Own key</dt><dd id="b-own">77c2…</dd></div>
+        <div><dt>Received</dt><dd id="b-got">3fa9…</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="controls">
+    <label class="switch"><input type="checkbox" id="mitm"><span class="track" aria-hidden="true"></span>Put an attacker in the middle</label>
+    <button type="button" id="rerun">New session</button>
+  </div>
+
+  <p class="status" id="status" role="status" data-state="match">The codes match. Both phones saw the same two keys.</p>
+
+  <figcaption id="demo-note">This simplified version is not secure by itself. An attacker who sees both keys can try keys until the codes collide. The protocols in my papers prevent that. An attack then succeeds about once in a million tries, provided the two people compare the codes and reject any mismatch.</figcaption>
+</figure>
+
+<section class="band" id="research" aria-labelledby="h-research">
+  <h2 id="h-research">Research</h2>
+  <div class="col">
+    <p>My coauthors and I give each protocol a formal security definition and a proof, and we design it to fit into protocols people already run. Three papers are published or accepted. Two more are in preparation, both with implementations and measurements. I write most of my code in C, Rust and Python.</p>
+
+    <h3>Comparing a short code</h3>
+    <p>Signal and WhatsApp hand out each user’s public keys from a server, and a compromised server can hand out the wrong ones. My coauthors and I designed a check that lets two people confirm each other’s keys by comparing six digits. It fits Signal’s existing handshake, adds one message, needs no change to the key server and stays secure even if that server is compromised (<a href="#p-asiacrypt">ASIACRYPT 2025</a>).</p>
+
+    <h3>Deniability and group chats</h3>
+    <p>Signal’s handshake is deniable. A saved transcript cannot prove to anyone else that two people talked. Our first design lost that property, and in follow-up work we restored it in every case but one (<a href="#p-scn">SCN 2026</a>). My advisor and I then extended the check to groups, including the protocol behind group chats in Signal and WhatsApp, with no extra round of messages (<a href="#p-cans">CANS 2026</a>, to appear).</p>
+
+    <h3>Logging in with a face</h3>
+    <p>A leaked biometric cannot be replaced like a password, and readings are noisy, so a protocol has to accept a close but inexact match. In a <a href="#p-bio">manuscript in preparation</a>, my coauthors and I give a protocol for remote biometric login in which the server stores only a one-way hash of each person’s biometric data and never the data itself. After a breach, an attacker can do no better than guess faces one at a time. We also give a formula that predicts how often the wrong face is accepted, including at settings too strict for any experiment to check. We implemented the protocol and measured its speed and accuracy.</p>
+
+    <h3>Keys from a password, hidden in ordinary traffic</h3>
+    <p>Some authorities mandate encryption they can read and can later compel people to hand over their secrets. A <a href="#p-pw">paper in preparation</a> with Stanislaw Jarecki and Jinyao Xu shows how two people who share only a password can agree on a hidden key inside that traffic. Their recorded sessions still look innocent after they are forced to reveal the password. We prove that this property needs three messages, and we give three protocols that use only three. One is built on ML-KEM, the standard designed to resist quantum computers. A session of either of the other two costs each party under 0.2 milliseconds in our prototype.</p>
+
+    <h3>Assumptions behind security proofs</h3>
+    <p>A security proof holds only under its assumptions. My <a href="#p-wp">working paper</a>, <i>What a Security Proof Cannot Prove</i>, sorts those assumptions by what each one depends on, such as a party’s honesty or a secret staying secret, and by who must uphold it. I applied the classification to the web’s certificate system, to Signal and to synced passkeys.</p>
+
+    <h3>What comes next</h3>
+    <ul class="next">
+      <li><b>Biometric login against generative attackers.</b> Published attacks build synthetic faces that match many people at once. I plan to measure those attacks at the strict thresholds our protocol uses.</li>
+      <li><b>Post-quantum short-code authentication.</b> Our short-code protocols rest on elliptic curves, which a quantum computer could break. People trust a verified key for years, and such a computer may exist within that time. My goal is a post-quantum version that still adds only one message and keeps deniability.</li>
+      <li><b>A security bound that includes the person.</b> Six digits protect people only if they notice a mismatch. In one study of codes read aloud over a call, listeners accepted 30 to 40 percent of mismatched word codes. I plan to define security in a way that counts how often people miss a mismatch.</li>
+    </ul>
+  </div>
 </section>
 
-<section aria-labelledby="publications">
-  <h2 id="publications">Publications</h2>
-  <p class="note">The conference papers list authors alphabetically, as is the convention in cryptography; I was a lead contributor to each.</p>
+<section class="band" id="papers" aria-labelledby="h-papers">
+  <h2 id="h-papers">Papers</h2>
+  <div class="col">
+    <p>The three conference papers list authors alphabetically, the convention in cryptography. I was a lead contributor to each.</p>
 
-  <h3>Conference papers</h3>
-  <ol class="pubs">
-    <li>
-      <span class="pub-title">Security without Trusted Third Parties: VRF-Based Authentication with Short Authenticated Strings</span>
-      <span class="pub-meta">Y. Gu, S. Jarecki, P. Nazarian, A. Rai. <i>ASIACRYPT 2025</i>.</span>
-      <span class="pub-links"><a href="https://eprint.iacr.org/2025/1654">ePrint</a><a href="https://doi.org/10.1007/978-981-95-5096-8_3">DOI</a></span>
-    </li>
-    <li>
-      <span class="pub-title">X3DH with Deniable Authentication without Trusted Third Parties</span>
-      <span class="pub-meta">S. Jarecki, P. Nazarian, A. Rai. <i>SCN 2026</i>.</span>
-      <span class="pub-links"><a href="https://eprint.iacr.org/2026/522">ePrint</a></span>
-    </li>
-    <li>
-      <span class="pub-title">SAS-Model Authentication of Group Key Agreement without Extra Communication Flows</span>
-      <span class="pub-meta">S. Jarecki, A. Rai. <i>CANS 2026</i>, to appear.</span>
-    </li>
-  </ol>
+    <h3>Conference papers</h3>
+    <ul class="pubs">
+      <li id="p-asiacrypt">
+        <span class="pub-title">Security without Trusted Third Parties: VRF-Based Authentication with Short Authenticated Strings</span>
+        <span class="pub-meta">Y. Gu, S. Jarecki, P. Nazarian, A. Rai. <i>ASIACRYPT 2025</i>.</span>
+        <span class="pub-links"><a href="https://eprint.iacr.org/2025/1654">ePrint</a><a href="https://doi.org/10.1007/978-981-95-5096-8_3">DOI</a></span>
+        <details>
+          <summary>Summary</summary>
+          <div>
+            <p>Earlier short-code protocols need three rounds of messages in every session. Ours is built from a verifiable random function, a keyed function whose outputs anyone can check against a public key. Its first round only exchanges public keys, which can be reused across sessions and have the same form as the keys Signal and WhatsApp already distribute. The apps’ handshake can serve as that first round, and our protocol adds one message to it.</p>
+          </div>
+        </details>
+      </li>
+      <li id="p-scn">
+        <span class="pub-title">X3DH with Deniable Authentication without Trusted Third Parties</span>
+        <span class="pub-meta">S. Jarecki, P. Nazarian, A. Rai. <i>SCN 2026</i>.</span>
+        <span class="pub-links"><a href="https://eprint.iacr.org/2026/522">ePrint</a></span>
+        <details>
+          <summary>Summary</summary>
+          <div>
+            <p>Our first design sends a proof that anyone can check. Such a proof works like a signature on the conversation, and deniability is lost. Here we replace it with a proof that only the intended recipient can check. Deniability is kept in every case but one, when a recipient has run out of one-time keys.</p>
+          </div>
+        </details>
+      </li>
+      <li id="p-cans">
+        <span class="pub-title">SAS-Model Authentication of Group Key Agreement without Extra Communication Flows</span>
+        <span class="pub-meta">S. Jarecki, A. Rai. <i>CANS 2026</i>, to appear.</span>
+        <details>
+          <summary>Summary</summary>
+          <div>
+            <p>Existing short-code schemes cost an extra round when applied to a group. We add the check to a two-round group key agreement protocol and to Sender Keys, the protocol behind group chats in Signal and WhatsApp, with no added rounds.</p>
+          </div>
+        </details>
+      </li>
+    </ul>
 
-  <h3>Under submission</h3>
-  <ol class="pubs">
-    <li>
-      <span class="pub-title">Asymmetric Fuzzy PAKE for Remote Biometric Authentication with Protection of Server-held Biometric Data</span>
-      <span class="pub-meta">J. Xu, A. Rai, P. Nazarian, S. Jarecki, I. Harris.</span>
-    </li>
-  </ol>
+    <h3>In preparation</h3>
+    <ul class="pubs">
+      <li id="p-bio">
+        <span class="pub-title">Asymmetric Fuzzy PAKE for Remote Biometric Authentication with Protection of Server-held Biometric Data</span>
+        <span class="pub-meta">J. Xu, A. Rai, P. Nazarian, S. Jarecki, I. Harris.</span>
+        <details>
+          <summary>Summary</summary>
+          <div>
+            <p>The protocol works on the embeddings that a face-recognition network produces. It combines locality-sensitive hashing, under which two readings of one face mostly agree, with a password-style key exchange that tolerates a small set of errors. A closed-form model predicts false-acceptance rates far below what an experiment can measure.</p>
+          </div>
+        </details>
+      </li>
+      <li id="p-pw">
+        <span class="pub-title">Password-Authenticated Double-Key Agreement: Bootstrapping Anamorphic Communication from a Shared Password</span>
+        <span class="pub-meta">With S. Jarecki and J. Xu.</span>
+        <details>
+          <summary>Summary</summary>
+          <div>
+            <p>Anamorphic cryptography lets two people communicate covertly inside traffic that an authority mandates and can decrypt, provided they already share a secret key. We show how to establish that key from a shared password, inside the mandated traffic. The sessions must stay hidden after the two are forced to reveal the password. We prove that this takes at least three messages. Each of our three protocols uses exactly three and sends only strings that look uniformly random.</p>
+          </div>
+        </details>
+      </li>
+    </ul>
 
-  <h3>Journal articles from undergraduate research</h3>
-  <ol class="pubs">
-    <li>
-      <span class="pub-title">Combining Quantum Key Distribution with Chaotic Systems for Free-Space Optical Communications</span>
-      <span class="pub-meta">N. Mahmud, A. MacGillivray, A. Rai, J. Patterson, A. Gharaibeh, E. El-Araby, H. Shaw, L. Cooper. <i>Quantum Information Processing</i> 20, 354 (2021).</span>
-      <span class="pub-links"><a href="https://doi.org/10.1007/s11128-021-03299-3">DOI</a></span>
-    </li>
-    <li>
-      <span class="pub-title">Efficient Computation Techniques and Hardware Architectures for Unitary Transformations in Support of Quantum Algorithm Emulation</span>
-      <span class="pub-meta">N. Mahmud, B. Haase-Divine, A. Kuhnke, A. Rai, A. MacGillivray, E. El-Araby. <i>Journal of Signal Processing Systems</i> 92 (2020).</span>
-      <span class="pub-links"><a href="https://doi.org/10.1007/s11265-020-01569-4">DOI</a></span>
-    </li>
-    <li>
-      <span class="pub-title">Modifying Quantum Grover’s Algorithm for Dynamic Multi-Pattern Search on Reconfigurable Hardware</span>
-      <span class="pub-meta">N. Mahmud, B. Haase-Divine, A. MacGillivray, B. Srimoungchanh, A. Kuhnke, N. Blankenau, A. Rai, E. El-Araby. <i>Journal of Computational Electronics</i> 19 (2020).</span>
-      <span class="pub-links"><a href="https://doi.org/10.1007/s10825-020-01489-3">DOI</a></span>
-    </li>
-  </ol>
+    <h3>Working paper</h3>
+    <ul class="pubs">
+      <li id="p-wp">
+        <span class="pub-title">What a Security Proof Cannot Prove: Types of Trust Assumptions and Their Grounds</span>
+        <span class="pub-meta">A. Rai. October 2026.</span>
+        <details>
+          <summary>Summary</summary>
+          <div>
+            <p>The paper sorts the assumptions behind a security proof by what each depends on, such as a party’s honesty or a secret staying secret, and by who must uphold it. What an assumption depends on decides which evidence can justify it. A trusted party’s honesty needs governance, such as audits and liability, while a password’s secrecy or the reliability of a human check can be measured. I applied the classification by hand to the web’s certificate system, to Signal and to synced passkeys.</p>
+          </div>
+        </details>
+      </li>
+    </ul>
+
+    <details class="older">
+      <summary>Three journal articles from undergraduate research</summary>
+      <div>
+        <ul class="pubs">
+          <li>
+            <span class="pub-title">Combining Quantum Key Distribution with Chaotic Systems for Free-Space Optical Communications</span>
+            <span class="pub-meta">N. Mahmud, A. MacGillivray, A. Rai, J. Patterson, A. Gharaibeh, E. El-Araby, H. Shaw, L. Cooper. <i>Quantum Information Processing</i> 20, 354 (2021).</span>
+            <span class="pub-links"><a href="https://doi.org/10.1007/s11128-021-03299-3">DOI</a></span>
+          </li>
+          <li>
+            <span class="pub-title">Efficient Computation Techniques and Hardware Architectures for Unitary Transformations in Support of Quantum Algorithm Emulation</span>
+            <span class="pub-meta">N. Mahmud, B. Haase-Divine, A. Kuhnke, A. Rai, A. MacGillivray, E. El-Araby. <i>Journal of Signal Processing Systems</i> 92 (2020).</span>
+            <span class="pub-links"><a href="https://doi.org/10.1007/s11265-020-01569-4">DOI</a></span>
+          </li>
+          <li>
+            <span class="pub-title">Modifying Quantum Grover’s Algorithm for Dynamic Multi-Pattern Search on Reconfigurable Hardware</span>
+            <span class="pub-meta">N. Mahmud, B. Haase-Divine, A. MacGillivray, B. Srimoungchanh, A. Kuhnke, N. Blankenau, A. Rai, E. El-Araby. <i>Journal of Computational Electronics</i> 19 (2020).</span>
+            <span class="pub-links"><a href="https://doi.org/10.1007/s10825-020-01489-3">DOI</a></span>
+          </li>
+        </ul>
+      </div>
+    </details>
+  </div>
 </section>
 
-<section aria-labelledby="teaching">
-  <h2 id="teaching">Teaching</h2>
-  <ul class="plain">
-    <li>Instructor of record for ICS 6B, Boolean Logic and Discrete Structures, in summer 2026: designed the course, wrote the exams and assignments, delivered all lectures to 20 students over a full 10-week session, and supervised a teaching assistant.</li>
-    <li>Teaching assistant for 11 quarters from 2022 to 2026 in discrete mathematics (ICS 6B, ICS 6D), applied cryptography (CS 167), and graduate computer security (CS 201P), with several quarters over 400 students. Head TA for ICS 6D in winter 2026, leading a team of 8 TAs, and co-head TA for four other quarters.</li>
-    <li>Co-supervised a four-student M.S. capstone team implementing the deniable X3DH protocol from our SCN 2026 paper.</li>
-    <li>Completed UC Irvine’s certificate program in evidence-based pedagogy, Division of Teaching Excellence and Innovation, 2026.</li>
-  </ul>
+<section class="band" id="teaching" aria-labelledby="h-teaching">
+  <h2 id="h-teaching">Teaching</h2>
+  <div class="col">
+    <p>Most of my teaching at UC Irvine has been in discrete mathematics, the first course in which many computing students write proofs. A single explanation rarely works for a whole room, so I keep several ready. One student wrote that when a problem was hard I tried “to introduce the topic to us in a different way.”</p>
+
+    <dl class="roles">
+      <dt>Instructor of record <span>Summer 2026</span></dt>
+      <dd>ICS 6B, Boolean Logic and Discrete Structures. I designed the course, wrote every exam and assignment, and taught all lectures to 20 students over ten weeks.</dd>
+
+      <dt>Head teaching assistant <span>Winter 2026</span></dt>
+      <dd>ICS 6D, Discrete Mathematics for Computer Science. I led a team of eight TAs. I was also co-head TA in four other quarters of ICS 6B and ICS 6D.</dd>
+
+      <dt>Teaching assistant <span>2022 to 2026</span></dt>
+      <dd>Eleven quarters across four courses, several with more than 400 students. Nine were in discrete mathematics, one in CS 167 Applied Cryptography and one in CS 201P Computer Security, a graduate course.</dd>
+
+      <dt>Research mentoring <span>2025 to 2026</span></dt>
+      <dd>I co-supervised four master’s students who implemented a protocol from my research in a modified copy of Signal’s code for their capstone project. I helped them understand the protocol and debug their implementation.</dd>
+    </dl>
+
+    <h3>Other teaching</h3>
+    <ul class="plain">
+      <li>Reading quizzes I wrote as a TA three years ago are still in use in ICS 6B and ICS 6D.</li>
+      <li>I completed UC Irvine’s Summer Teaching Apprenticeship Program, a certificate course in evidence-based pedagogy, in 2026.</li>
+      <li>I would like to teach discrete mathematics, cryptography and computer security, and to add a course on authentication and secure messaging.</li>
+    </ul>
+  </div>
 </section>
 
-<section aria-labelledby="service">
-  <h2 id="service">Service</h2>
-  <p>Subreviewer for EUROCRYPT 2025, CRYPTO 2025, and EUROCRYPT 2026.</p>
+<section class="band" id="background" aria-labelledby="h-background">
+  <h2 id="h-background">Background and service</h2>
+  <div class="col">
+    <p>Before Irvine I studied computer science and mathematics at the University of Kansas, where I earned a B.S. and a B.A. in 2021. There I worked in a lab that emulated quantum algorithms on reconfigurable hardware, where I coauthored three journal articles. I also worked on GPU-accelerated integer factoring.</p>
+    <ul class="plain">
+      <li>Dissertation Fellowship, UC Irvine, fall 2026 to winter 2027.</li>
+      <li>External reviewer for EUROCRYPT 2025, CRYPTO 2025 and EUROCRYPT 2026.</li>
+      <li>Talks at UC Irvine’s cryptography seminar, on my own papers and on papers by others.</li>
+    </ul>
+  </div>
 </section>
-
-<footer>Last updated September 2026.</footer>
 
 </main>
+
+<footer class="wrap foot">
+  <div class="foot-in">
+    <p>Last updated November 2026.</p>
+    <p>This page loads nothing from other sites and sets no cookies.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* Theme switch */
+  var root = document.documentElement, themeBtn = $('theme');
+  function currentTheme() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function labelTheme() {
+    var next = currentTheme() === 'dark' ? 'light' : 'dark';
+    themeBtn.textContent = next === 'dark' ? 'Dark' : 'Light';
+    themeBtn.setAttribute('aria-label', 'Switch to ' + next + ' theme');
+  }
+  if (themeBtn) {
+    labelTheme();
+    themeBtn.addEventListener('click', function () {
+      var next = currentTheme() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      labelTheme();
+    });
+  }
+
+  /* Mark the section in view in the top bar */
+  var links = {}, navLinks = document.querySelectorAll('.top nav a[href^="#"]');
+  Array.prototype.forEach.call(navLinks, function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  if ('IntersectionObserver' in window) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting; });
+      var active = null;
+      ['research', 'papers', 'teaching'].forEach(function (id) { if (seen[id]) active = active || id; });
+      Object.keys(links).forEach(function (id) {
+        if (id === active) links[id].setAttribute('aria-current', 'true'); else links[id].removeAttribute('aria-current');
+      });
+    }, { rootMargin: '-25% 0px -60% 0px' });
+    ['research', 'papers', 'teaching'].forEach(function (id) { var s = $(id); if (s) io.observe(s); });
+  }
+
+  /* A link to a paper opens its summary. */
+  function openTarget() {
+    var id = location.hash.slice(1);
+    if (!id || id.indexOf('p-') !== 0) return;
+    var li = $(id), d = li && li.querySelector('details');
+    if (d) d.open = true;
+  }
+  window.addEventListener('hashchange', openTarget);
+  openTarget();
+  window.addEventListener('beforeprint', function () {
+    Array.prototype.forEach.call(document.querySelectorAll('details'), function (d) { d.open = true; });
+  });
+
+  /* Short-code demo.
+     Each phone hashes the pair (Alice's key, Bob's key) as that phone saw it and shows six digits.
+     With an attacker in the middle, each phone receives one of the attacker's keys instead. */
+  var stage = $('stage');
+  if (!stage) return;
+  var subtle = window.crypto && window.crypto.subtle;
+  var useSubtle = !!(subtle && subtle.generateKey && subtle.digest);
+  var session = null;
+
+  function randomBytes(n) {
+    var b = new Uint8Array(n);
+    window.crypto.getRandomValues(b);
+    return b;
+  }
+  function newKey() {
+    if (!useSubtle) {
+      if (!(window.crypto && window.crypto.getRandomValues)) return Promise.reject(new Error('no randomness'));
+      return Promise.resolve(randomBytes(65));
+    }
+    return subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, false, ['deriveBits'])
+      .then(function (pair) { return subtle.exportKey('raw', pair.publicKey); })
+      .then(function (raw) { return new Uint8Array(raw); });
+  }
+  function hash(bytes) {
+    if (useSubtle) return subtle.digest('SHA-256', bytes).then(function (d) { return new Uint8Array(d); });
+    var h = 0x811c9dc5, out = new Uint8Array(4);
+    for (var i = 0; i < bytes.length; i++) { h ^= bytes[i]; h = Math.imul(h, 0x01000193) >>> 0; }
+    out[0] = h >>> 24; out[1] = (h >>> 16) & 255; out[2] = (h >>> 8) & 255; out[3] = h & 255;
+    return Promise.resolve(out);
+  }
+  function codeFor(aliceKey, bobKey) {
+    var joined = new Uint8Array(aliceKey.length + bobKey.length);
+    joined.set(aliceKey, 0); joined.set(bobKey, aliceKey.length);
+    return hash(joined).then(function (d) {
+      var n = ((d[0] << 24) | (d[1] << 16) | (d[2] << 8) | d[3]) >>> 0;
+      var s = ('000000' + (n % 1000000)).slice(-6);
+      return s.slice(0, 3) + ' ' + s.slice(3);
+    });
+  }
+  function print(key) {
+    var s = '';
+    for (var i = 1; i <= 2; i++) s += ('0' + key[i].toString(16)).slice(-2);
+    return s + '\u2026';
+  }
+  function setCode(el, text) {
+    el.textContent = text;
+    el.classList.remove('fresh');
+    void el.offsetWidth;
+    el.classList.add('fresh');
+  }
+
+  function render() {
+    if (!session) return;
+    var on = $('mitm').checked, s = session;
+    var aliceGot = on ? s.m1 : s.b, bobGot = on ? s.m2 : s.a;
+    Promise.all([codeFor(s.a, aliceGot), codeFor(bobGot, s.b)]).then(function (codes) {
+      var same = codes[0] === codes[1];
+      stage.setAttribute('data-state', same ? 'match' : 'differ');
+      stage.setAttribute('data-attacker', on ? 'on' : 'off');
+      setCode($('code-a'), codes[0]); setCode($('code-b'), codes[1]);
+      $('a-own').textContent = print(s.a); $('b-own').textContent = print(s.b);
+      $('a-got').textContent = print(aliceGot); $('b-got').textContent = print(bobGot);
+      $('a-got').className = on ? 'swapped' : ''; $('b-got').className = on ? 'swapped' : '';
+      $('wire-label').textContent = on ? 'Attacker' : 'Network';
+      $('wire-note').textContent = on ? 'replaces both keys with its own' : 'passes both keys unchanged';
+      var status = $('status');
+      status.setAttribute('data-state', same ? 'match' : 'differ');
+      if (!on) status.textContent = 'The codes match. Both phones saw the same two keys.';
+      else if (!same) status.textContent = 'The codes differ. The attacker replaced both keys, and the two people catch it when they compare.';
+      else status.textContent = 'The codes happen to match, the one case in a million.';
+    });
+  }
+  function newSession() {
+    return Promise.all([newKey(), newKey(), newKey(), newKey()]).then(function (k) {
+      session = { a: k[0], b: k[1], m1: k[2], m2: k[3] };
+      render();
+    });
+  }
+
+  function start() {
+    return newSession().catch(function () {
+      /* Web Crypto refused (for example on an insecure origin): use stand-in keys. */
+      if (!useSubtle) throw new Error('no demo');
+      useSubtle = false;
+      return newSession();
+    });
+  }
+
+  $('mitm').addEventListener('change', render);
+  $('rerun').addEventListener('click', function () { start().catch(function () {}); });
+  start().then(function () {
+    var note = $('demo-note');
+    var lead = useSubtle
+      ? 'Your browser generated these elliptic-curve keys and hashed them just now. '
+      : 'The keys here are random stand-ins. ';
+    note.textContent = lead + note.textContent;
+  }).catch(function () {
+    /* Nothing worked: leave the static figure and hide the controls. */
+    var c = document.querySelector('.controls');
+    if (c) c.style.display = 'none';
+  });
+})();
+</script>
 </body>
 </html>
